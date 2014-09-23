@@ -12,13 +12,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -48,34 +43,12 @@ public class ViewPanel extends JPanel implements ActionListener,
 ChangeListener, MouseListener {
 	// Create a new media player instance for the run-time platform
 
-	//==================IO Project Stuff==========================================================
-	private boolean exportTitle = false;
-	private boolean exportCredits = false;
-	private boolean exportOverlayText = false;
-	private boolean exportOverlayAudio = false;
-	private boolean exportReplaceAudio = false;
-	private boolean exportMergeAudio = false;
-
-	private AudioStripPanel audioStripPanel;
-	private AudioOverlayPanel audioOverlayPanel;
-	private AudioReplacePanel audioReplacePanel;
-	
-	private ArrayList<String> projectUpdateList = new ArrayList<String>();
-	
-	//=============================================================================================
-	
-	/*
-	 * AudioReplacePanel audioReplacePanel = new AudioReplacePanel(mediaComponent, directory, inputFile);
-		AudioStripPanel audioStripPanel = new AudioStripPanel( directory, inputFile);
-		AudioOverlayPanel audioOverlayPanel = new AudioOverlayPanel();
-	 */
-
-//	private String workingDirectory = "/afs/ec.auckland.ac.nz/users/h/s/hsye185/unixhome/Documents/";
+	private String workingDirectory = "/afs/ec.auckland.ac.nz/users/h/s/hsye185/unixhome/Documents/";
 
 	// Tabbed Pane containinee Panels
 	TitleCreditsPanel titleCreditsPanel;
 	OverlayPanel overlayPanel;
-	AudioPanel audioPanel;
+	//AudioPanel audioPanel;
 
 	private PreviewWorker previewWorker;
 	private FileTree workspaceFileTree;
@@ -118,9 +91,6 @@ ChangeListener, MouseListener {
 	private JButton drawOverlay2 = new JButton("Add Overlay to ending");
 	private JButton drawOverlayAudio = new JButton("Add Audio Overlay");
 	private JButton drawOverlayAudio2 = new JButton("Add 2nd Audio Overlay");
-	private JButton setVideoButton = new JButton("Set Main Video File");
-	private JButton saveProjectButton = new JButton("Save Project");
-	private JButton openProjectButton = new JButton("Open Project");
 
 	private EmbeddedMediaPlayerComponent mediaComponent = new EmbeddedMediaPlayerComponent();
 	private EmbeddedMediaPlayer videoPlayer = mediaComponent.getMediaPlayer();
@@ -148,12 +118,32 @@ ChangeListener, MouseListener {
 	private String fileLocation;
 	// so of there is no parent, its only a slash, does that make sense?
 	private String directory = "/";
-	private String workingDirectory = "/";
 	private String inputFile;
 
-	public ViewPanel(String inputWorkingDirectory) {
-		workingDirectory = inputWorkingDirectory;
+	public ViewPanel() {
+
 		// displaying a file chooser
+
+		while (fileLocation == null) {
+			final JFileChooser fc = new JFileChooser();
+			fc.setDialogTitle("Please select a media file =)");
+			fc.showOpenDialog(this);
+			// setting file variable to the selected file
+			try {
+				fileLocation = fc.getSelectedFile().getAbsolutePath();
+				directory = fc.getSelectedFile().getParent() + "/";
+				inputFile = fc.getSelectedFile().getName();
+				//				System.out.println(fileLocation);
+				//				 System.out.println(inputFile);
+				//				 System.out.println(directory);
+				// final String directory =
+				// "/media/felz123/HOLDEN/HaseebsWorkplace/";
+			} catch (NullPointerException n) {
+
+			}
+
+		}
+
 		//		videoPlayer.playMedia(inputFile);
 		//		videoPlayer.stop();
 
@@ -230,38 +220,24 @@ ChangeListener, MouseListener {
 		// bottomPanel.setBorder(BorderFactory.createLineBorder(Color.cyan));
 		// ======
 
-		thumbnailViewPanel.setLayout(new BorderLayout());
 		thumbnailViewPanel.setPreferredSize(new Dimension(200, 200));
 		thumbnailViewPanel.setBackground(Color.LIGHT_GRAY);
 		thumbnailViewPanel.setBorder(BorderFactory
 				.createLineBorder(Color.BLACK));
-
-		JPanel topButtonPanel = new JPanel();
-
-
 		drawMain.addActionListener(this);
-		topButtonPanel.add(drawMain);
+		thumbnailViewPanel.add(drawMain);
 		drawTitle.addActionListener(this);
-		topButtonPanel.add(drawTitle);
+		thumbnailViewPanel.add(drawTitle);
 		drawCredits.addActionListener(this);
-		topButtonPanel.add(drawCredits);
+		thumbnailViewPanel.add(drawCredits);
 		drawOverlay1.addActionListener(this);
-		topButtonPanel.add(drawOverlay1);
+		thumbnailViewPanel.add(drawOverlay1);
 		drawOverlay2.addActionListener(this);
-		topButtonPanel.add(drawOverlay2);
+		thumbnailViewPanel.add(drawOverlay2);
 		drawOverlayAudio.addActionListener(this);
-		topButtonPanel.add(drawOverlayAudio);
+		thumbnailViewPanel.add(drawOverlayAudio);
 		drawOverlayAudio2.addActionListener(this);
-		topButtonPanel.add(drawOverlayAudio2);
-		saveProjectButton.addActionListener(this);
-		topButtonPanel.add(saveProjectButton);
-		openProjectButton.addActionListener(this);
-		topButtonPanel.add(openProjectButton);
-
-
-		thumbnailViewPanel.add(topButtonPanel,BorderLayout.CENTER);
-		setVideoButton.addActionListener(this);
-		thumbnailViewPanel.add(setVideoButton,BorderLayout.PAGE_END);
+		thumbnailViewPanel.add(drawOverlayAudio2);
 
 		add(thumbnailViewPanel, BorderLayout.CENTER);
 
@@ -269,11 +245,11 @@ ChangeListener, MouseListener {
 		fileTreePanel.setPreferredSize(new Dimension(250, 200));
 		fileTreePanel.setBackground(Color.BLACK);
 		fileTreePanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		// System.out.println(fileTreePanel.getY());
-		workspaceFileTree = new FileTree(new File(workingDirectory));
-		workspaceFileTree.getTree().addMouseListener(this);
-		fileTreePanel.add(workspaceFileTree,BorderLayout.CENTER);
-
+				// System.out.println(fileTreePanel.getY());
+	//	workspaceFileTree = new FileTree(new File(directory));
+	//	workspaceFileTree.getTree().addMouseListener(this);
+		//fileTreePanel.add(workspaceFileTree,BorderLayout.CENTER);
+		
 		add(fileTreePanel, BorderLayout.LINE_START);
 
 		// build the File menu
@@ -318,13 +294,13 @@ ChangeListener, MouseListener {
 		editTitle.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		JTabbedPane editContent = new JTabbedPane();
 		editContent.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		titleCreditsPanel = new TitleCreditsPanel();
+		titleCreditsPanel = new TitleCreditsPanel(mediaComponent, directory, inputFile);
 		//overlayPanel = new OverlayPanel();
 		overlayPanel = new OverlayPanel(mediaComponent, directory, inputFile);
 		// audioPanel = new AudioPanel();
-		audioReplacePanel = new AudioReplacePanel(mediaComponent, directory, inputFile);
-		audioStripPanel = new AudioStripPanel( directory, inputFile);
-		audioOverlayPanel = new AudioOverlayPanel();
+		AudioReplacePanel audioReplacePanel = new AudioReplacePanel(mediaComponent, directory, inputFile);
+		AudioStripPanel audioStripPanel = new AudioStripPanel( directory, inputFile);
+		AudioOverlayPanel audioOverlayPanel = new AudioOverlayPanel(directory, inputFile);
 		overlayPanel.getGenerateButton().addActionListener(this);
 		editContent.add("Title/Credits", titleCreditsPanel);
 		editContent.add("Overlay Text", overlayPanel);
@@ -457,104 +433,6 @@ ChangeListener, MouseListener {
 		}else if(e.getSource()==overlayPanel.getGenerateButton()){
 			previewWorker = new PreviewWorker();
 			previewWorker.execute();
-		}else if(e.getSource()==setVideoButton){
-			while (fileLocation == null) {
-				final JFileChooser fc = new JFileChooser();
-				fc.setDialogTitle("Please select a media file =)");
-				fc.showOpenDialog(this);
-				// setting file variable to the selected file
-				try {
-					fileLocation = fc.getSelectedFile().getAbsolutePath();
-					directory = fc.getSelectedFile().getParent() + "/";
-					inputFile = fc.getSelectedFile().getName();
-					//				System.out.println(fileLocation);
-					//				 System.out.println(inputFile);
-					//				 System.out.println(directory);
-					// final String directory =
-					// "/media/felz123/HOLDEN/HaseebsWorkplace/";
-				} catch (NullPointerException n) {
-
-				}
-
-			}
-		}else if(e.getSource()==saveProjectButton){
-			PrintWriter writer = null;
-			try {
-				writer = new PrintWriter("exampleProject.proj", "UTF-8");
-				writer.println("MainVideo="+fileLocation);
-				writer.println("MainVideoDirectory="+directory);
-				writer.println("WorkingDirectory="+workingDirectory);
-				writer.println("Title="+exportTitle);
-				writer.println("Credits="+exportCredits);
-				writer.println("OverlayText="+exportOverlayText);
-				writer.println("OverlayAudio="+exportOverlayAudio);
-				writer.println("ReplaceAudio="+exportReplaceAudio);
-				writer.println("Merge="+exportMergeAudio);
-				writer.println("TitleCreditsText="+titleCreditsPanel.getTextChooser().getText());
-				writer.println("TitleCreditsFontSize="+titleCreditsPanel.getSizeChooser().getSelectedItem());
-				writer.println("TitleCreditsFontColor="+titleCreditsPanel.getFontColorChooser().getSelectedItem());
-				writer.println("TitleCreditsFontType="+titleCreditsPanel.getFontChooser().getSelectedItem());
-				writer.println("TitleCreditsBackgroundColor="+titleCreditsPanel.getBackgroundColorChooser().getSelectedItem());
-				writer.println("TitleCreditsPositionX="+titleCreditsPanel.getPositionTextFieldX().getText());
-				writer.println("TitleCreditsPositionY="+titleCreditsPanel.getPositionTextFieldY().getText());
-				writer.println("TitleCreditsSidePosition="+titleCreditsPanel.getTextSideChooser().getSelectedItem());
-				writer.println("TitleCreditsTime="+titleCreditsPanel.getTimeTextField().getText());
-				writer.println("OverlayText="+overlayPanel.getTextChooser().getText());
-				writer.println("OverlayFontSize="+overlayPanel.getSizeChooser().getSelectedItem());
-				writer.println("OverlayFontColor="+overlayPanel.getFontColorChooser().getSelectedItem());
-				writer.println("OverlayFontType="+overlayPanel.getFontChooser().getSelectedItem());
-				writer.println("OverlayPositionX="+overlayPanel.getPositionTextFieldX().getText());
-				writer.println("OverlayPositionY="+overlayPanel.getPositionTextFieldY().getText());
-				writer.println("OverlaySidePosition="+overlayPanel.getTextSideChooser().getSelectedItem());
-				writer.println("OverlayTime="+overlayPanel.getTimeTextField().getText());
-				writer.println("StripAudioOutputDirectory="+audioStripPanel.getStripOutputTextField().getText());
-				writer.println("OverlayAudioInputFile="+audioOverlayPanel.getOverlayInputTextField().getText());
-				writer.println("OverlayAudioStartTime="+audioOverlayPanel.getStartTimeTextField().getText());
-				writer.println("OverlayAudioEndTime="+audioOverlayPanel.getEndTimeTextField().getText());
-				writer.println("ReplaceAudioInputFile="+audioReplacePanel.getReplaceInputTextField().getText());
-				writer.println("ReplaceAudioOutputDirectory="+audioReplacePanel.getDirChooserTextField().getText());
-				writer.println("========MergeTOCOMPLETE======");
-				writer.println("========addDrawingsSAved..ieHashmap======");
-
-				writer.close();
-				
-				JOptionPane.showMessageDialog(null, "Project Saved!");
-			} catch (FileNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (UnsupportedEncodingException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-
-		}else if(e.getSource()==openProjectButton){
-			try{
-				BufferedReader br = new BufferedReader(new FileReader("exampleProject.proj"));
-				String line;
-				while ((line = br.readLine()) != null) {
-					StringBuilder sb = new StringBuilder();
-					boolean foundSeperator=false;
-					for(int i=0;i<line.length();i++){
-						
-						if(foundSeperator){
-							sb.append(line.charAt(i));
-						}else if(line.charAt(i)=='='){
-							foundSeperator=true;
-						}
-
-					}
-					//System.out.println(sb.toString());
-					projectUpdateList.add(sb.toString());
-				}
-				br.close();
-				
-				
-				
-				
-			}catch(Exception eIO){
-
-			}
-			System.out.println(projectUpdateList);
 		}
 	}
 
@@ -692,7 +570,7 @@ ChangeListener, MouseListener {
 			}else{
 				int lengthOfVideo = (int)(videoPlayer.getLength()/1000);
 				int startTime = lengthOfVideo - Integer.parseInt(overlayPanel.getTimeTextField().getText()); 
-				//				System.out.println(lengthOfVideo);
+//				System.out.println(lengthOfVideo);
 				cmd="avconv -ss "+startTime+" -i /media/hsye185/HSYE185/workspace/SE206_Assignment3_hsye185_felz123/wild.mp4 -strict experimental -vf " +
 						"\"drawtext=fontfile=/media/hsye185/HSYE185/workspace/SE206_Assignment3_hsye185_felz123/"+overlayPanel.getFontChooser().getSelectedItem().toString()+".ttf:fontsize="+overlayPanel.getSizeChooser().getSelectedItem().toString()+":fontcolor="+overlayPanel.getFontColorChooser().getSelectedItem().toString()+":x="+overlayPanel.getPositionTextFieldX().getText()+":y="+overlayPanel.getPositionTextFieldY().getText()+":text='"+overlayPanel.getTextChooser().getText()+"'\" -t "+overlayPanel.getTimeTextField().getText()+" -y  /media/hsye185/HSYE185/workspace/SE206_Assignment3_hsye185_felz123/preview.mp4";
 			}
@@ -767,7 +645,7 @@ ChangeListener, MouseListener {
 						.getLength()));
 			}
 		}else if(e.getSource()==workspaceFileTree.getTree()){
-			System.out.println("@@@ "+e.getPoint().x+" "+e.getPoint().y);
+			System.out.println("@@@ "+e.getPoint());
 		}
 
 	}
@@ -779,7 +657,8 @@ ChangeListener, MouseListener {
 				videoPlayer.setTime((int) ((e.getX() / 600.0) * videoPlayer
 						.getLength()));
 			}else if(e.getSource()==workspaceFileTree.getTree()){
-				System.out.println("@@@ "+e.getPoint().x+" "+e.getPoint().y);
+				
+				System.out.println(e.getPoint());
 			} 
 		}
 
