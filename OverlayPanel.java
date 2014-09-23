@@ -1,5 +1,10 @@
 package mainpackage;
 
+/**
+ * Overlay text over video panel
+ * Authors: Farida, Haseeb
+ * */
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,6 +32,7 @@ import javax.swing.SwingWorker;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 
+@SuppressWarnings("serial")
 public class OverlayPanel extends JPanel implements ActionListener {
 
 	private JPanel leftPanel = new JPanel();
@@ -44,7 +50,7 @@ public class OverlayPanel extends JPanel implements ActionListener {
 	private JComboBox<String> textSideChooser = new JComboBox<String>(
 			new String[] { "Beginning", "Ending" });
 	private JLabel positionLabel = new JLabel("Choose a position");
-	
+
 	private JButton positionChooser = new JButton("...");
 	private JTextField positionX = new JTextField(4);
 	private JTextField positionY = new JTextField(4);
@@ -53,7 +59,7 @@ public class OverlayPanel extends JPanel implements ActionListener {
 	private JButton addTextButton = new JButton("Add to Project");
 
 	private JButton generateButton = new JButton("Generate Preview");
-	
+
 	private String chosenText;
 	private int chosenSize;
 	private String chosenFont;
@@ -68,13 +74,9 @@ public class OverlayPanel extends JPanel implements ActionListener {
 	private String workingDirectory;
 	private String file;
 
-	// replace path of directory with input path and leave variable name as it
-	// is
-	// final String directory = "/media/felz123/HOLDEN/HaseebsWorkplace/";
-	// final String dir = "/media/felz123/HOLDEN/HaseebsWorkplace/.vamix/";
 	private static final String dir = System.getProperty("user.home")
 			+ "/.vamix1/";
-	// we have to know directory of where src folder is
+
 	String fontDir = "/media/felz123/HOLDEN/HaseebsWorkplace/SE206_Assignment3_hsye185_felz123/";
 
 	public OverlayPanel(EmbeddedMediaPlayerComponent mediaComponent,
@@ -84,9 +86,9 @@ public class OverlayPanel extends JPanel implements ActionListener {
 		this.video = mediaComponent;
 
 		addTextButton.addActionListener(this);
+		
 		setLayout(new BorderLayout());
 		add(leftPanel, BorderLayout.LINE_START);
-		// rightPanel.setBackground(Color.red);
 		add(rightPanel, BorderLayout.CENTER);
 
 		textChooser.setPreferredSize(new Dimension(300, 100));
@@ -98,7 +100,6 @@ public class OverlayPanel extends JPanel implements ActionListener {
 		rightPanel.setLayout(new GridBagLayout());
 
 		GridBagConstraints eC = new GridBagConstraints();
-		// eC.weighty = 1;
 		eC.weightx = 1;
 		eC.gridx = 0;
 		eC.gridy = 0;
@@ -116,10 +117,6 @@ public class OverlayPanel extends JPanel implements ActionListener {
 		fontChooser.addActionListener(this);
 		fontPanel.add(fontChooser);
 		rightPanel.add(fontPanel, eC);
-		// eC.gridy = 2;
-		// rightPanel.add(backgroundLabel,eC);
-		// eC.gridy = 3;
-		// rightPanel.add(backgroundColorChooser,eC);
 		eC.gridy = 4;
 		rightPanel.add(positionLabel, eC);
 		eC.gridy = 5;
@@ -135,20 +132,21 @@ public class OverlayPanel extends JPanel implements ActionListener {
 		positionPanel.add(textSideChooser);
 		rightPanel.add(positionPanel, eC);
 		eC.gridy = 6;
-		rightPanel.add(timeLabel,eC);
+		rightPanel.add(timeLabel, eC);
 		eC.gridy = 7;
-		rightPanel.add(timeTextField,eC);
+		rightPanel.add(timeTextField, eC);
 		eC.insets = new Insets(10, 0, 0, 0);
 		eC.gridy = 8;
-		rightPanel.add(generateButton,eC);
-		eC.gridy=9;
-		rightPanel.add(addTextButton,eC);
-		
-		
+		rightPanel.add(generateButton, eC);
+		eC.gridy = 9;
+		rightPanel.add(addTextButton, eC);
+
 	}
-	public JButton getGenerateButton(){
+
+	public JButton getGenerateButton() {
 		return this.generateButton;
 	}
+
 	public JLabel getTextLabel() {
 		return textLabel;
 	}
@@ -233,16 +231,11 @@ public class OverlayPanel extends JPanel implements ActionListener {
 		return this.positionY;
 	}
 
-	/*
-	 * public void overlayText(){ System.out.println(chosenText);
-	 * System.out.println(chosenFont); System.out.println(chosenSize);
-	 * System.out.println(chosenX); System.out.println(chosenY);
-	 * System.out.println(chosenColor); System.out.println(chosenTime);
-	 * System.out.println(chosenEnding); }
-	 */
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addTextButton) {
+			addTextButton.setEnabled(false);
 			chosenText = this.textChooser.getText();
 			chosenFont = this.fontChooser.getSelectedItem().toString();
 			chosenSize = Integer.parseInt(this.sizeChooser.getSelectedItem()
@@ -253,7 +246,7 @@ public class OverlayPanel extends JPanel implements ActionListener {
 			chosenTime = this.timeTextField.getText();
 			chosenEnding = this.textSideChooser.getSelectedItem().toString();
 
-			// if one of the fields is empty
+			// check no field is left blank
 			if (chosenX.isEmpty() || chosenY.isEmpty() || chosenTime.isEmpty()
 					|| chosenText.isEmpty()) {
 				JOptionPane.showMessageDialog(null,
@@ -267,9 +260,8 @@ public class OverlayPanel extends JPanel implements ActionListener {
 				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				chooser.setAcceptAllFileFilterUsed(false);
 
-				// if directory is chosen, we assign it to directoryChosen
-				// variable
-				// directory for output file
+				//if directory is chosen, we assign it to directoryChosen
+				// variable directory for output file
 				if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 
 					directoryChosen = chooser.getSelectedFile()
@@ -277,9 +269,9 @@ public class OverlayPanel extends JPanel implements ActionListener {
 
 					overlayText(directoryChosen, workingDirectory, file);
 
-					// if directory remains null and wasn't specified by user,
-					// error
-					// message displays
+					
+					//if directory remains null and wasn't specified by user,
+					//error message displays			 
 				} else if (directoryChosen == null) {
 
 					JOptionPane.showMessageDialog(null,
@@ -289,7 +281,7 @@ public class OverlayPanel extends JPanel implements ActionListener {
 				}
 			}
 
-			// overlayText();
+			//making sure no fields were left blank
 		} else if (e.getSource() == fontChooser || e.getSource() == sizeChooser) {
 			chosenFont = this.fontChooser.getSelectedItem().toString();
 			chosenSize = Integer.parseInt(this.sizeChooser.getSelectedItem()
@@ -309,13 +301,12 @@ public class OverlayPanel extends JPanel implements ActionListener {
 
 	}
 
-	// method that overlays text over video
-	public void overlayText(String directoryChosen, String directory,
+	// method that overlays text over video, calling background thread
+	private void overlayText(String directoryChosen, String directory,
 			String inputFile) {
 
 		BackgroundOverlayText bg = new BackgroundOverlayText(directoryChosen,
 				directory, inputFile);
-		// BackgroundOverlayText bg = new BackgroundOverlayText();
 		bg.execute();
 
 	}
@@ -324,6 +315,7 @@ public class OverlayPanel extends JPanel implements ActionListener {
 		String directoryChosen;
 		String directory;
 		String inputFile;
+		Process process;
 
 		public BackgroundOverlayText(String directoryCh, String workDir,
 				String input) {
@@ -340,22 +332,16 @@ public class OverlayPanel extends JPanel implements ActionListener {
 				e1.printStackTrace();
 			}
 
-			Process process;
+			
 			String outputFile = "texted";
 			String x = "temp";
-			// String inputFile = "wild";
 
 			StringBuilder sb = new StringBuilder();
-			/**
-			 * avconv -i wild.mp4 -vf
-			 * "drawtext=fontfile='/media/felz123/HOLDEN/HaseebsWorkplace/SE206_Assignment3_hsye185_felz123/Arial.ttf
-			 * ' :text='hi i hope this works':fontcolor=black:draw='lt(t,5)'"
-			 * -c:a copy trial.mp4 that works with no cutting or anything
-			 * 
-			 * **/
+
 			// adding to beginning
 			if (chosenEnding.equals("Beginning")) {
-				// adding text
+				
+				// Adding text to beginning
 				sb.append("avconv -ss 0 -i " + directory + inputFile
 						+ " -strict experimental -vf \"drawtext=fontfile="
 						+ fontDir + chosenFont + ".ttf'");
@@ -364,11 +350,9 @@ public class OverlayPanel extends JPanel implements ActionListener {
 				sb.append(": x='" + chosenX + "': y='" + chosenY + "': text='"
 						+ chosenText);
 				sb.append("'\" -t " + chosenTime + " -y ");
-				sb.append(dir + outputFile + ".mp4 "); //
+				sb.append(dir + outputFile + ".mp4 "); 
 
-				// took out -an and added strict -ss 0
-
-				// generating ending .st file
+				// re-encoding files
 				sb.append("; avconv -ss 0 -i " + dir + outputFile //
 						+ ".mp4 -vcodec libx264 -acodec aac   ");
 				sb.append("  -bsf:v h264_mp4toannexb -f mpegts -strict experimental -y "
@@ -379,7 +363,7 @@ public class OverlayPanel extends JPanel implements ActionListener {
 				sb.append("  -bsf:v h264_mp4toannexb -f mpegts -strict experimental -y "
 						+ dir + x + ".ts"); //
 
-				// concatenating to end
+				// Concatenating files
 				sb.append("; avconv -i concat:\"" + dir
 						+ outputFile//
 						+ ".ts|" + dir
@@ -387,18 +371,13 @@ public class OverlayPanel extends JPanel implements ActionListener {
 						+ ".ts\" -c copy    -bsf:a aac_adtstoasc -y "
 						+ directoryChosen + "final.mp4");//
 
-				// adding to ending
+				// Adding to ending
 			} else {
-				System.out.println("hI");
-				// does adding int in middle of command work?
-				// getLength is not working for now
-				// int seconds
-				int seconds = ((int) video.getMediaPlayer().getLength() / 1000)
-						- Integer.parseInt(chosenTime);
-				// int seconds = (30000 / 1000) - Integer.parseInt(chosenTime);
-				System.out.println(video.getMediaPlayer().getLength());
-				// System.out.println("timechosen" + seconds);
-				// adding text
+
+				int videoLength = ViewPanel.getVideoLength(directory, inputFile);
+				int seconds = videoLength - Integer.parseInt(chosenTime);
+
+				// Adding text to ending
 				sb.append("avconv -ss " + seconds + " -i " + directory
 						+ inputFile
 						+ " -strict experimental -vf \"drawtext=fontfile="
@@ -410,9 +389,7 @@ public class OverlayPanel extends JPanel implements ActionListener {
 				sb.append("'\" -t " + chosenTime + " -y ");
 				sb.append(dir + outputFile + ".mp4 "); //
 
-				// took out -an and added strict
-
-				// generating ending .st file
+				// re-encoding files
 				sb.append("; avconv -ss 0 -i " + dir + outputFile //
 						+ ".mp4 -vcodec libx264 -acodec aac   ");
 				sb.append("  -bsf:v h264_mp4toannexb -f mpegts -strict experimental -y "
@@ -423,7 +400,7 @@ public class OverlayPanel extends JPanel implements ActionListener {
 				sb.append("  -bsf:v h264_mp4toannexb -f mpegts -strict experimental -t "
 						+ seconds + " -y " + dir + x + ".ts"); //
 
-				// concatenating to end
+				// Concatenating 
 				sb.append("; avconv -i concat:\"" + dir
 						+ x //
 						+ ".ts|" + dir
@@ -432,18 +409,6 @@ public class OverlayPanel extends JPanel implements ActionListener {
 						+ directoryChosen + "final.mp4"); //
 
 			}
-
-			// getting audio out of video
-			/*
-			 * sb.append("; avconv -i " + directory + inputFile + " " + dir // +
-			 * x + ".mp3");
-			 * 
-			 * // adding audio back, i am actually adding audio over audio, see
-			 * if // u can add it on only on the overlaid part
-			 * sb.append("; avconv -i " + dir + "final.mp4 -i " + dir // // + x
-			 * + ".mp3 -c copy -map 0:0 -map 1:0 " + directoryChosen +
-			 * "output.mp4");
-			 */
 
 			String command = sb.toString();
 			ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c",
@@ -469,8 +434,15 @@ public class OverlayPanel extends JPanel implements ActionListener {
 				e.printStackTrace();
 			}
 			addTextButton.setEnabled(true);
+			int exitvalue = process.exitValue();
+			if(exitvalue==0){
 			JOptionPane.showMessageDialog(null,
-					"Overlaying text on video was successful!");
+					"Overlaying text on video was successful =)");
+			}else{
+				JOptionPane.showMessageDialog(null,
+						"Error encountered, Overlaying text was not successful =(");
+			}
+			
 			positionX.setText("");
 			positionY.setText("");
 			timeTextField.setText("");
@@ -481,12 +453,3 @@ public class OverlayPanel extends JPanel implements ActionListener {
 	}
 
 }
-// //testing
-/*
- * System.out.println(chosenText); System.out.println(chosenFont);
- * System.out.println(chosenSize); System.out.println(chosenX);
- * 
- * System.out.println(chosenY); System.out.println(chosenColor);
- * System.out.println(chosenTime); System.out.println(chosenEnding);
- */
-
