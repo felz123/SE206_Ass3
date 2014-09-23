@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
@@ -27,9 +26,7 @@ import javax.swing.SwingWorker;
 
 import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 
-import mainpackage.AudioOverlayPanel.BackgroundOverlayAudio;
-import mainpackage.OverlayPanel.BackgroundOverlayText;
-
+@SuppressWarnings("serial")
 public class TitleCreditsPanel extends JPanel implements ActionListener{
 	private JPanel leftPanel = new JPanel();
 	private JPanel rightPanel = new JPanel();
@@ -230,18 +227,17 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 	private void overlayText(String directoryChosen, String directory,
 			String inputFile) {
 
-		BackgroundOverlayText bg = new BackgroundOverlayText(directoryChosen,
+		BackgroundtitlesAndCredits bg = new BackgroundtitlesAndCredits(directoryChosen,
 				directory, inputFile);
-		// BackgroundOverlayText bg = new BackgroundOverlayText();
 		bg.execute();
 
 	}
-	class BackgroundOverlayText extends SwingWorker<Void, String> {
+	class BackgroundtitlesAndCredits extends SwingWorker<Void, String> {
 		String directoryChosen;
 		String directory;
 		String inputFile;
 
-		public BackgroundOverlayText(String directoryCh, String workDir,
+		public BackgroundtitlesAndCredits(String directoryCh, String workDir,
 				String input) {
 			this.directoryChosen = directoryCh;
 			this.directory = workDir;
@@ -270,9 +266,7 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 			 * 
 			 * **/
 			
-//			String command ="avconv -i /media/felz123/HOLDEN/HaseebsWorkplace/wild.mp4 " +
-//					"-ss 00:00:00.001 -f image2 -vframes 1 /media/felz123/HOLDEN/HaseebsWorkplace/out.png";
-			
+		
 			
 			// adding to beginning
 			if (chosenEnding.equals("Beginning")) {
@@ -378,17 +372,6 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 
 			}
 
-			// getting audio out of video
-			/*
-			 * sb.append("; avconv -i " + directory + inputFile + " " + dir // +
-			 * x + ".mp3");
-			 * 
-			 * // adding audio back, i am actually adding audio over audio, see
-			 * if // u can add it on only on the overlaid part
-			 * sb.append("; avconv -i " + dir + "final.mp4 -i " + dir // // + x
-			 * + ".mp3 -c copy -map 0:0 -map 1:0 " + directoryChosen +
-			 * "output.mp4");
-			 */
 
 			String command = sb.toString();
 			System.out.println(command);
