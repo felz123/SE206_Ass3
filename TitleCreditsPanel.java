@@ -24,22 +24,26 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
-import uk.co.caprica.vlcj.component.EmbeddedMediaPlayerComponent;
 
 @SuppressWarnings("serial")
-public class TitleCreditsPanel extends JPanel implements ActionListener{
+public class TitleCreditsPanel extends JPanel implements ActionListener {
 	private JPanel leftPanel = new JPanel();
 	private JPanel rightPanel = new JPanel();
-	
+
 	private JLabel textLabel = new JLabel("Enter text");
 	private JTextArea textChooser = new JTextArea();
 	private JLabel fontLabel = new JLabel("Font specifications");
-	private JComboBox<String> sizeChooser = new JComboBox<String>(new String[]{"7","8","9","10","11","12","13","14","15"});
-	private JComboBox<String> fontChooser = new JComboBox<String>(new String[]{"Arial","Comic Sans","Lexia","Ultra Violet"});
+	private JComboBox<String> sizeChooser = new JComboBox<String>(new String[] {
+			"10", "14", "18", "22", "28", "36", "48", "72" });
+	private JComboBox<String> fontChooser = new JComboBox<String>(new String[] {
+			"Arial", "Comic Sans", "Lexia", "Ultra Violet" });
 	private JLabel backgroundLabel = new JLabel("Background Color");
-	private JComboBox<String> fontColorChooser = new JComboBox<String>(new String[]{"Black","White","Blue","Red","Green"});
-	private JComboBox<String> backgroundColorChooser = new JComboBox<String>(new String[]{"Black","White","Blue","Red","Green"});
-	private JComboBox<String> textSideChooser = new JComboBox<String>(new String[]{"Beginning","Ending"});
+	private JComboBox<String> fontColorChooser = new JComboBox<String>(
+			new String[] { "Black", "White", "Blue", "Red", "Green" });
+	private JComboBox<String> backgroundColorChooser = new JComboBox<String>(
+			new String[] { "Black", "White", "Blue", "Red", "Green" });
+	private JComboBox<String> textSideChooser = new JComboBox<String>(
+			new String[] { "Beginning", "Ending" });
 	private JLabel positionLabel = new JLabel("Choose a position");
 	private JButton positionChooser = new JButton("...");
 	private JTextField positionX = new JTextField(4);
@@ -47,116 +51,105 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 	private JLabel timeLabel = new JLabel("Insert Time (Seconds)");
 	private JTextField timeTextField = new JTextField(10);
 	private JButton addTextButton = new JButton("Add to Project");
-	
+
 	private String chosenText;
 	private int chosenSize;
 	private String chosenFont;
 	private String chosenX;
 	private String chosenY;
 	private String chosenColor;
-	private String chosenBackgroundColor;
 	private String chosenTime;
 	private String chosenEnding;
 	private String directoryChosen;
-	
-	private EmbeddedMediaPlayerComponent video;
+
 	private String workingDirectory;
 	private String file;
-	
+
 	private static final String dir = System.getProperty("user.home")
 			+ "/.vamix1/";
-	// we have to know directory of where src folder is
+
 	String fontDir = "/media/felz123/HOLDEN/HaseebsWorkplace/SE206_Assignment3_hsye185_felz123/";
 
-	
-	public TitleCreditsPanel(EmbeddedMediaPlayerComponent mediaComponent,
+	public TitleCreditsPanel(
 			String directory, String inputFile) {
+		
 		this.workingDirectory = directory;
 		this.file = inputFile;
-		this.video = mediaComponent;
-		
-		
-			setLayout(new BorderLayout());
-			add(leftPanel,BorderLayout.LINE_START);
-//			rightPanel.setBackground(Color.red);
-			add(rightPanel,BorderLayout.CENTER);
-			
-			textChooser.setPreferredSize(new Dimension(300,100));
-			textChooser.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-			textChooser.setLineWrap(true);
-			
-			leftPanel.setLayout(new GridBagLayout());
-			leftPanel.setPreferredSize(new Dimension(350,1));
-			rightPanel.setLayout(new GridBagLayout());
-			
-		    GridBagConstraints eC = new GridBagConstraints();
-//		    eC.weighty = 1;
-		    eC.weightx = 1;
-		    eC.gridx = 0;
-		    eC.gridy = 0;
-		    leftPanel.add(textLabel,eC);
-		    eC.gridy = 1;
-		    leftPanel.add(textChooser,eC);
-		    eC.gridy = 0;
-		    rightPanel.add(fontLabel,eC);
-		    eC.gridy = 1;
-		    
-		    JPanel fontPanel = new JPanel();
-		    sizeChooser.addActionListener(this);
-		    fontPanel.add(sizeChooser);
-		    fontColorChooser.addActionListener(this);
-		    fontPanel.add(fontColorChooser);
-		    fontChooser.addActionListener(this);
-		    fontPanel.add(fontChooser);
-		    rightPanel.add(fontPanel,eC);
-		    eC.gridy = 2;
-		    rightPanel.add(backgroundLabel,eC);
-		    eC.gridy = 3;
-		    rightPanel.add(backgroundColorChooser,eC);
-		    eC.gridy = 4;
-		    rightPanel.add(positionLabel,eC);
-		    eC.gridy = 5;
-		    JPanel positionPanel = new JPanel();
-		    positionChooser.setPreferredSize(new Dimension(30,22));
-		    positionPanel.add(positionChooser);
-			positionX.setPreferredSize(new Dimension(50,22));
-			positionPanel.add(positionX);
-			positionY.setPreferredSize(new Dimension(50,22));
-			positionPanel.add(positionY);
-		    textSideChooser.setPreferredSize(new Dimension(80,22));
-		    positionPanel.add(textSideChooser);
-		    rightPanel.add(positionPanel,eC);
-		    eC.gridy = 6;
-		    rightPanel.add(timeLabel,eC);
-		    eC.gridy = 7;
-		    rightPanel.add(timeTextField,eC);
-		    eC.gridy = 8;
-		    addTextButton.addActionListener(this);
-		    rightPanel.add(addTextButton,eC);
+
+		setLayout(new BorderLayout());
+		add(leftPanel, BorderLayout.LINE_START);
+		add(rightPanel, BorderLayout.CENTER);
+
+		textChooser.setPreferredSize(new Dimension(300, 100));
+		textChooser.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		textChooser.setLineWrap(true);
+
+		leftPanel.setLayout(new GridBagLayout());
+		leftPanel.setPreferredSize(new Dimension(350, 1));
+		rightPanel.setLayout(new GridBagLayout());
+
+		GridBagConstraints eC = new GridBagConstraints();
+		eC.weightx = 1;
+		eC.gridx = 0;
+		eC.gridy = 0;
+		leftPanel.add(textLabel, eC);
+		eC.gridy = 1;
+		leftPanel.add(textChooser, eC);
+		eC.gridy = 0;
+		rightPanel.add(fontLabel, eC);
+		eC.gridy = 1;
+
+		JPanel fontPanel = new JPanel();
+		sizeChooser.addActionListener(this);
+		fontPanel.add(sizeChooser);
+		fontColorChooser.addActionListener(this);
+		fontPanel.add(fontColorChooser);
+		fontChooser.addActionListener(this);
+		fontPanel.add(fontChooser);
+		rightPanel.add(fontPanel, eC);
+		eC.gridy = 2;
+		rightPanel.add(backgroundLabel, eC);
+		eC.gridy = 3;
+		rightPanel.add(backgroundColorChooser, eC);
+		eC.gridy = 4;
+		rightPanel.add(positionLabel, eC);
+		eC.gridy = 5;
+		JPanel positionPanel = new JPanel();
+		positionChooser.setPreferredSize(new Dimension(30, 22));
+		positionPanel.add(positionChooser);
+		positionX.setPreferredSize(new Dimension(50, 22));
+		positionPanel.add(positionX);
+		positionY.setPreferredSize(new Dimension(50, 22));
+		positionPanel.add(positionY);
+		textSideChooser.setPreferredSize(new Dimension(80, 22));
+		positionPanel.add(textSideChooser);
+		rightPanel.add(positionPanel, eC);
+		eC.gridy = 6;
+		rightPanel.add(timeLabel, eC);
+		eC.gridy = 7;
+		rightPanel.add(timeTextField, eC);
+		eC.gridy = 8;
+		addTextButton.addActionListener(this);
+		rightPanel.add(addTextButton, eC);
 	}
-	public JButton getPositionButton(){
+
+	public JButton getPositionButton() {
 		return this.positionChooser;
 	}
-	public JTextField getPositionTextFieldX(){
+
+	public JTextField getPositionTextFieldX() {
 		return this.positionX;
 	}
-	public JTextField getPositionTextFieldY(){
+
+	public JTextField getPositionTextFieldY() {
 		return this.positionY;
 	}
-	public void overlayText(){
-		System.out.println(chosenText);
-		System.out.println(chosenFont);
-		System.out.println(chosenSize);
-		System.out.println(chosenX);
-		System.out.println(chosenY);
-		System.out.println(chosenColor);
-		System.out.println(chosenTime);
-		System.out.println(chosenEnding);
-		System.out.println(chosenBackgroundColor);
-	}
+
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addTextButton) {
+			addTextButton.setEnabled(false);
 			chosenText = this.textChooser.getText();
 			chosenFont = this.fontChooser.getSelectedItem().toString();
 			chosenSize = Integer.parseInt(this.sizeChooser.getSelectedItem()
@@ -167,12 +160,14 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 			chosenTime = this.timeTextField.getText();
 			chosenEnding = this.textSideChooser.getSelectedItem().toString();
 
-			// if one of the fields is empty
+			// check no field is left blank
 			if (chosenX.isEmpty() || chosenY.isEmpty() || chosenTime.isEmpty()
 					|| chosenText.isEmpty()) {
 				JOptionPane.showMessageDialog(null,
 						"please fill all required fields!");
 				addTextButton.setEnabled(true);
+				
+				//no fields are left empty, choose output directory
 			} else {
 
 				final JFileChooser chooser = new JFileChooser();
@@ -182,8 +177,7 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 				chooser.setAcceptAllFileFilterUsed(false);
 
 				// if directory is chosen, we assign it to directoryChosen
-				// variable
-				// directory for output file
+				// variable directory for output file
 				if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 
 					directoryChosen = chooser.getSelectedFile()
@@ -192,8 +186,7 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 					overlayText(directoryChosen, workingDirectory, file);
 
 					// if directory remains null and wasn't specified by user,
-					// error
-					// message displays
+					// error message displays
 				} else if (directoryChosen == null) {
 
 					JOptionPane.showMessageDialog(null,
@@ -203,7 +196,7 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 				}
 			}
 
-			// overlayText();
+			//changes fonts of already written text, updates
 		} else if (e.getSource() == fontChooser || e.getSource() == sizeChooser) {
 			chosenFont = this.fontChooser.getSelectedItem().toString();
 			chosenSize = Integer.parseInt(this.sizeChooser.getSelectedItem()
@@ -222,20 +215,22 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 		}
 
 	}
-		
-	// method that overlays text over video
+
+	// calls background task to be executed on a swingworker
 	private void overlayText(String directoryChosen, String directory,
 			String inputFile) {
 
-		BackgroundtitlesAndCredits bg = new BackgroundtitlesAndCredits(directoryChosen,
-				directory, inputFile);
+		BackgroundtitlesAndCredits bg = new BackgroundtitlesAndCredits(
+				directoryChosen, directory, inputFile);
 		bg.execute();
 
 	}
+
 	class BackgroundtitlesAndCredits extends SwingWorker<Void, String> {
 		String directoryChosen;
 		String directory;
 		String inputFile;
+		Process process;
 
 		public BackgroundtitlesAndCredits(String directoryCh, String workDir,
 				String input) {
@@ -252,34 +247,23 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 				e1.printStackTrace();
 			}
 
-			Process process;
 			String outputFile = "texted";
 			String x = "temp";
-			// String inputFile = "wild";
 
 			StringBuilder sb = new StringBuilder();
-			/**
-			 * avconv -i wild.mp4 -vf
-			 * "drawtext=fontfile='/media/felz123/HOLDEN/HaseebsWorkplace/SE206_Assignment3_hsye185_felz123/Arial.ttf
-			 * ' :text='hi i hope this works':fontcolor=black:draw='lt(t,5)'"
-			 * -c:a copy trial.mp4 that works with no cutting or anything
-			 * 
-			 * **/
-			
-		
-			
-			// adding to beginning
+
+			//TITLES
 			if (chosenEnding.equals("Beginning")) {
-				
-				sb.append("avconv -i "+ directory + inputFile +
-					" -ss 00:00:00.001 -f image2 -vframes 1 "+dir+"out.png");
+
+				// Making video out of an image
+				sb.append("avconv -i " + directory + inputFile
+						+ " -ss 00:00:00.001 -f image2 -vframes 1 " + dir
+						+ "out.png");
 				sb.append(" ; avconv -loop 1 -shortest -y -i " + dir
 						+ "out.png");
 				sb.append(" -t " + chosenTime + " -y " + dir + "result.mp4");
-				
-				
-				
-				// adding text
+
+				// Adding text to video made above
 				sb.append(" ; avconv -ss 0 -i " + dir + "result.mp4"
 						+ " -strict experimental -vf \"drawtext=fontfile="
 						+ fontDir + chosenFont + ".ttf'");
@@ -288,56 +272,51 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 				sb.append(": x='" + chosenX + "': y='" + chosenY + "': text='"
 						+ chosenText);
 				sb.append("'\" -t " + chosenTime + " -y ");
-				sb.append(dir + outputFile + ".mp4 "); //
+				sb.append(dir + outputFile + ".mp4 "); 
 
-				// took out -an and added strict -ss 0
-
-				// generating ending .st file
-				sb.append("; avconv -ss 0 -i " + dir + outputFile //
+				// Re-encoding files
+				sb.append("; avconv -ss 0 -i " + dir + outputFile 
 						+ ".mp4 -vcodec libx264 -acodec aac   ");
 				sb.append("  -bsf:v h264_mp4toannexb -f mpegts -strict experimental -y "
-						+ dir + outputFile + ".ts"); //
+						+ dir + outputFile + ".ts"); 
 
-				sb.append("; avconv -ss 0 -i " + directory
-						+ inputFile + " -vcodec libx264 -acodec aac   ");
+				sb.append("; avconv -ss 0 -i " + directory + inputFile
+						+ " -vcodec libx264 -acodec aac   ");
 				sb.append("  -bsf:v h264_mp4toannexb -f mpegts -strict experimental -y "
-						+ dir + x + ".ts"); //
+						+ dir + x + ".ts"); 
 
-				// concatenating to end
+				// Concatenating files
 				sb.append("; avconv -i concat:\"" + dir
-						+ outputFile//
+						+ outputFile
 						+ ".ts|" + dir
 						+ x//
-						+ ".ts\" -c copy    -bsf:a aac_adtstoasc -an -y "
-						+ dir + "final.mp4");//
+						+ ".ts\" -c copy    -bsf:a aac_adtstoasc -an -y " + dir
+						+ "final.mp4");
 
-				
-				sb.append("; avconv -i " + directory + inputFile + " " + dir  +
-						    "soundtrack.mp3");
-						  
-						 sb.append("; avconv -i " + dir + "final.mp4 -itsoffset "+chosenTime+" -i " + dir 
-						  + "soundtrack.mp3 -c copy -map 0:0 -map 1:0 " + directoryChosen +
-						  "output.mp4");
-						 
+				//Extracting mp3 and re-adding to output video
+				sb.append("; avconv -i " + directory + inputFile + " " + dir
+						+ "soundtrack.mp3");
 
-						 
+				sb.append("; avconv -i " + dir + "final.mp4 -itsoffset "
+						+ chosenTime + " -i " + dir
+						+ "soundtrack.mp3 -c copy -map 0:0 -map 1:0 "
+						+ directoryChosen + "output.mp4");
 
-				// adding to ending
+				// CREDITS
 			} else {
+			
+				//getting video length
+				int videoLength = ViewPanel.getVideoLength(directory, inputFile);
+				int seconds = videoLength - Integer.parseInt(chosenTime);
+				
+				// Making video out of an image
+				sb.append("avconv -i " + directory + inputFile + " -ss " + videoLength
+						+ " -f image2 -vframes 1 " + dir + "out.png");
+				sb.append(" ; avconv -loop 1 -shortest -y -i " + dir
+						+ "out.png");
+				sb.append(" -t " + chosenTime + " -y " + dir + "result.mp4");
 
-				int a= (int) video.getMediaPlayer().getLength() / 1000;
-				int seconds = a- Integer.parseInt(chosenTime);
-				// int seconds = (30000 / 1000) - Integer.parseInt(chosenTime);
-				System.out.println(video.getMediaPlayer().getLength());
-				// System.out.println("timechosen" + seconds);
-				// adding text
-				
-				sb.append("avconv -i "+ directory + inputFile +
-						" -ss "+a+" -f image2 -vframes 1 "+dir+"out.png");
-					sb.append(" ; avconv -loop 1 -shortest -y -i " + dir
-							+ "out.png");
-					sb.append(" -t " + chosenTime + " -y " + dir + "result.mp4");
-				
+				//Adding text to previous video
 				sb.append(" ; avconv -ss " + seconds + " -i " + dir
 						+ "result.mp4"
 						+ " -strict experimental -vf \"drawtext=fontfile="
@@ -347,34 +326,30 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 				sb.append(": x='" + chosenX + "': y='" + chosenY + "': text='"
 						+ chosenText);
 				sb.append("'\" -t " + chosenTime + " -y ");
-				sb.append(dir + outputFile + ".mp4 "); //
+				sb.append(dir + outputFile + ".mp4 "); 
 
-				// took out -an and added strict
-
-				// generating ending .st file
-				sb.append("; avconv -ss 0 -i " + dir + outputFile //
+				// Re-encoding files
+				sb.append("; avconv -ss 0 -i " + dir + outputFile 
 						+ ".mp4 -vcodec libx264 -acodec aac   ");
 				sb.append("  -bsf:v h264_mp4toannexb -f mpegts -strict experimental -y "
-						+ dir + outputFile + ".ts"); //
+						+ dir + outputFile + ".ts"); 
 
 				sb.append("; avconv -i " + directory + inputFile
 						+ " -vcodec libx264 -acodec aac   ");
 				sb.append("  -bsf:v h264_mp4toannexb -f mpegts -strict experimental "
-						 + " -y " + dir + x + ".ts"); //
+						+ " -y " + dir + x + ".ts"); 
 
-				// concatenating to end
+				// Concatenating files
 				sb.append("; avconv -i concat:\"" + dir
 						+ x //
 						+ ".ts|" + dir
 						+ outputFile //
 						+ ".ts\" -c copy    -bsf:a aac_adtstoasc -y "
-						+ directoryChosen + "final.mp4"); //
+						+ directoryChosen + "final.mp4"); 
 
 			}
 
-
 			String command = sb.toString();
-			System.out.println(command);
 			ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c",
 					command);
 
@@ -398,8 +373,15 @@ public class TitleCreditsPanel extends JPanel implements ActionListener{
 				e.printStackTrace();
 			}
 			addTextButton.setEnabled(true);
-			JOptionPane.showMessageDialog(null,
-					"Overlaying text on video was successful!");
+			int exitvalue = process.exitValue();
+			if(exitvalue==0){
+				JOptionPane.showMessageDialog(null,
+						"Adding titles/credits was successful=)");
+			}else{
+				JOptionPane.showMessageDialog(null,
+						"Error encountered, adding titles/credits was not successful =(");
+			}
+
 			positionX.setText("");
 			positionY.setText("");
 			timeTextField.setText("");
