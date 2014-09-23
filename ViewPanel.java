@@ -13,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
@@ -39,6 +40,7 @@ import com.sun.jna.NativeLibrary;
 //fix error when both fwd/rwd pressed
 //add to play video from current JSLIDER
 //Fix play button, after stopped and scroller moved
+@SuppressWarnings("serial")
 public class ViewPanel extends JPanel implements ActionListener,
 ChangeListener, MouseListener {
 	// Create a new media player instance for the run-time platform
@@ -294,10 +296,8 @@ ChangeListener, MouseListener {
 		editTitle.setBorder(BorderFactory.createLineBorder(Color.BLACK));
 		JTabbedPane editContent = new JTabbedPane();
 		editContent.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-		titleCreditsPanel = new TitleCreditsPanel(mediaComponent, directory, inputFile);
-		//overlayPanel = new OverlayPanel();
+		titleCreditsPanel = new TitleCreditsPanel(directory, inputFile);
 		overlayPanel = new OverlayPanel(mediaComponent, directory, inputFile);
-		// audioPanel = new AudioPanel();
 		AudioReplacePanel audioReplacePanel = new AudioReplacePanel(mediaComponent, directory, inputFile);
 		AudioStripPanel audioStripPanel = new AudioStripPanel( directory, inputFile);
 		AudioOverlayPanel audioOverlayPanel = new AudioOverlayPanel(directory, inputFile);
@@ -674,4 +674,39 @@ ChangeListener, MouseListener {
 
 	}
 
+	public static int getVideoLength(String directory, String inputFile){
+		Process process;
+		String cmd = "avprobe -loglevel error -show_streams " + directory+inputFile + " | grep -i duration | cut -f2 -d=";
+		ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+		
+		try {
+			process = builder.start();
+			InputStream error = process.getInputStream();
+			BufferedReader stder = new BufferedReader(
+					new InputStreamReader(error));
+
+			String line = null;
+	
+			while ((line = stder.readLine()) != null) {
+				return (int)Double.parseDouble(line);
+							
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return 0;
+		
+		
+	}
+	
+//	public static boolean checkMediaFile(){
+//		
+//	}
+//	
+//	public static boolean fileExists(){
+//		
+//	}
+	
 }
